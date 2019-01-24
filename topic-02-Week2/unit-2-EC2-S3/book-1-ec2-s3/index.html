@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css"
+          type="text/css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/railscasts.min.css"
+          rel="stylesheet"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/java.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+      
+
+body {
+  font-family: "Open Sans", "Helvetica", "Helvetica Neue",  "Arial", sans-serif;
+  font-size:90%;
+  color: black;
+}
+
+p {
+  margin: 0.5em;
+}
+
+pre code {
+  font-family: "Monaco";
+  font-size: 100%;
+}
+
+img {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin:10px;
+}
+
+h1, h2, h3 {
+  border-bottom:thin solid black;
+  margin-bottom: 0.5em;
+  margin-top: 1em;
+}
+
+h1 {
+  font-style:italic;
+  font-size:130%;
+}
+
+h2 {
+  font-size:110%;
+}
+
+h3 {
+  font-size:100%;
+}
+
+
+
+      
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+.wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.footer {
+  background: white;
+  text-align: right;
+}
+.content {
+  flex: 1;
+  overflow: auto;
+}
+
+
+
+    </style>
+  </head>
+
+  
+  
+
+  <div class="ui fixed top pointing inverted stackable menu labmenu">
+    <header class="header item">
+      <i id="toc" class="sitemap icon"></i>
+      
+        <a href="../../index.html"> Week 2, Part 2: AWS EC2 & S3  </a>
+      
+    </header>
+    <div class="right tab-menu menu">
+      
+        <a class="item" data-tab="Lab objectives">
+          Lab objectives
+        </a>
+      
+        <a class="item" data-tab="1">
+          1
+        </a>
+      
+        <a class="item" data-tab="2">
+          2
+        </a>
+      
+        <a class="item" data-tab="3">
+          3
+        </a>
+      
+        <a class="item" data-tab="4">
+          4
+        </a>
+      
+    </div>
+  </div>
+
+
+  
+
+  <div class="ui pushable">
+    <div class="ui inverted labeled icon left inline vertical sidebar menu">
+      <br><br>
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-01-Python/unit-1-Python-Intro/book-1-python/index.html">Lab objectives </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-02-Week2/unit-1-More-Python/book-1-python/index.html">Lab objectives </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-02-Week2/unit-2-EC2-S3/book-1-ec2-s3/index.html">Lab objectives </a>
+          
+        
+      
+    </div>
+    <div class="pusher" tabindex="-1">
+      <div class="ui basic segment">
+        <br>
+        
+          <div class="ui tab segment lab" data-tab="Lab objectives">
+            <h1>Objectives</h1>
+<p>Get some experience with EC2 User Data, Instance Metadata and S3 buckets </p>
+<p>In this lab we will:</p>
+<ul>
+<li>Configure EC2 User Data to automate web server configuration on startup.</li>
+<li>See and example how Instance Metadata can be used</li>
+<li>Create an S3 bucket</li>
+<li>Upload an image to the bucket and make it public</li>
+<li>Use that image in a simple web application</li>
+</ul>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="1">
+            <h1>Launch EC2 instance with User Data (Note this is the same as Week 0, with addition of User data -- step 8)</h1>
+<ol>
+<li><p>Log into <a href="www.rosettahub.com">RosettaHUB</a> using the user name and password provided by RosettaHUB.</p>
+</li>
+<li><p>Click the &quot;Go to AWS Console&quot; button. </p>
+</li>
+<li><p>The AWS management console should open in a new browser tab.  You may need to enable pop-ups from rosettahub.com. Click on Services near the top left and select EC2 from the Compute category. </p>
+</li>
+<li><p>This will bring you to the EC2 Dashboard. From here, click on <em>Launch Instance</em>.</p>
+</li>
+<li><p>Select the first Amazon Machine Image (AMI) listed, which runs Amazon Linux 2. </p>
+</li>
+<li><p>At Step 2: Choose an Instance Type, leave everything as it is (t2.micro) and click on <em>Next: Configure Instance Details</em> (not Review and Launch just yet).</p>
+</li>
+<li><p>At Step 3: Configure Instance Details, <em>scroll to the bottom of the page and expand <strong>Advanced Details</strong>.</em>.</p>
+</li>
+<li><p>Paste the following into the <strong>User data</strong> text box:</p>
+<pre><code>#!/bin/bash
+yum update -y
+yum install httpd -y
+systemctl enable httpd
+systemctl start httpd</code></pre>
+</li>
+<li><p>Click on <em>Next: Add Storage</em>.</p>
+</li>
+<li><p>At Step 4: Add Storage, again leave everything as it is and click on <em>Next: Add Tags</em>.</p>
+</li>
+<li><p>At Step 5: Add Tags, click Add Tag and enter &quot;Name&quot; as the Key and &quot;User data demo&quot; as the Value. Then click on Next: Configure Security Group.</p>
+</li>
+<li><p>At Step 6: Configure Security Group page, you can use the rule you created in Week 0 to allow HTTP traffic </p>
+</li>
+<li><p>Click <em>Review and Launch</em>. At Step 7: Review Instance Launch page, click <em>Launch</em>.</p>
+</li>
+<li><p>You will now see a dialogue: &quot;Select an existing key pair or create a new key pair&quot;. You can choose the key pair you created in Week 0. Click on <em>Launch Instances</em>.</p>
+</li>
+<li><p>Click the <em>View Instances</em> button at the bottom right of the Launch Status page. Take note of the public IP address of your newly-created instance.</p>
+</li>
+<li><p>After a few minutes, test that the web server is working by pointing a web browser to
+<strong><a href="http://public_ip_addr">http://public_ip_addr</a></strong>
+(replacing public_ip_addr with the address of your instance).  It will take a few minutes for the web server to be installed and started up.</p>
+</li>
+<li><p>Terminate the instance when you are finished.</p>
+</li>
+</ol>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="2">
+            <h1>View instance metadata</h1>
+<p>Let&#39;s display some Instance metadata on our web page instead of the default Apache test page.</p>
+<p>Repeat the previous step, replacing the User data with the following</p>
+<pre><code>#!/bin/bash
+yum update -y
+yum install httpd -y
+systemctl enable httpd
+systemctl start httpd
+echo &quot;&lt;h2&gt;Test page&lt;/h2&gt;Instance ID: &quot; &gt; /var/www/html/index.html
+curl --silent http://169.254.169.254/latest/meta-data/instance-id/ &gt;&gt; /var/www/html/index.html
+echo &quot;&lt;br&gt;Availability zone: &quot; &gt;&gt; /var/www/html/index.html
+curl --silent http://169.254.169.254/latest/meta-data/placement/availability-zone/ &gt;&gt; /var/www/html/index.html
+echo &quot;&lt;br&gt;IP address: &quot; &gt;&gt; /var/www/html/index.html
+curl --silent http://169.254.169.254/latest/meta-data/public-ipv4 &gt;&gt; /var/www/html/index.html</code></pre>
+<p>After a few minutes, test that the web server is working by pointing a web browser to
+<strong><a href="http://public_ip_addr">http://public_ip_addr</a></strong>
+(replacing public_ip_addr with the address of your instance).  It will take a few minutes for the web server to be installed and started up.</p>
+<p>You should see some basic instance metadata displayed.</p>
+<p>Terminate the instance when you are finished.</p>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="3">
+            <h1>Create an S3 bucket</h1>
+<ol>
+<li><p>At the AWS management console, click on <em>Services</em> near the top left and select <em>S3</em> from the Storage category. </p>
+</li>
+<li><p>From the Amazon S3 console dashboard, choose <em>Create Bucket</em>.</p>
+</li>
+<li><p>Type a bucket name in Bucket Name. The bucket name you choose must be globally unique across all existing bucket names in Amazon S3 (that is, across all AWS customers). For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html">Bucket Restrictions and Limitations</a>. </p>
+</li>
+<li><p>Leave the other fields unchanged and click <em>Next</em></p>
+</li>
+<li><p>Click <em>Next</em> again at the Configure Options step</p>
+</li>
+<li><p>At the Permissions step, uncheck the first two checkboxes &quot;Block new public ACLs and uploading public objects&quot; and &quot;Remove public access granted through public ACLs&quot;. This will allow us to upload an object that will be visible to anyone on the Internet.</p>
+</li>
+</ol>
+<h1>Upload an object to our S3 bucket</h1>
+<ol>
+<li><p>Select our newly-created bucket and click <em>Upload</em></p>
+</li>
+<li><p>Add an image of your choice (not something sensitive as this will be on the public Internet) and click &quot;Next&quot;</p>
+</li>
+<li><p>Under &quot;Manage public permissions&quot;, choose &quot;Grant public read access to this object(s)&quot; and click &quot;Next&quot;</p>
+</li>
+<li><p>Click &quot;Upload&quot;</p>
+</li>
+<li><p>Select your newly-uploaded file and copy the &quot;Object URL&quot; to the clipboard.  It will be of the form: <a href="https://s3-eu-west-1.amazonaws.com/bucketname/filename">https://s3-eu-west-1.amazonaws.com/bucketname/filename</a></p>
+</li>
+<li><p>You can paste this Object URL into a browser to verify that your image is public.</p>
+</li>
+</ol>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="4">
+            <h1>Display your image in your web app running on EC2</h1>
+<p>Repeat the steps 1/2, replacing the User data with the following.<br><em>(Don&#39;t copy and paste blindly! Insert your object URL on the last line.)</em></p>
+<pre><code>#!/bin/bash
+yum update -y
+yum install httpd -y
+systemctl enable httpd
+systemctl start httpd
+echo &quot;&lt;h2&gt;Test page&lt;/h2&gt;Instance ID: &quot; &gt; /var/www/html/index.html
+curl --silent http://169.254.169.254/latest/meta-data/instance-id/ &gt;&gt; /var/www/html/index.html
+echo &quot;&lt;br&gt;Availability zone: &quot; &gt;&gt; /var/www/html/index.html
+curl --silent http://169.254.169.254/latest/meta-data/placement/availability-zone/ &gt;&gt; /var/www/html/index.html
+echo &quot;&lt;br&gt;IP address: &quot; &gt;&gt; /var/www/html/index.html
+curl --silent http://169.254.169.254/latest/meta-data/public-ipv4 &gt;&gt; /var/www/html/index.html
+echo &quot;&lt;hr&gt;Here is an image that I have stored on S3: &lt;br&gt;&quot; &gt;&gt; /var/www/html/index.html
+echo &quot;&lt;img src=INSERT YOUR OBJECT URL HERE&gt;&quot; &gt;&gt; /var/www/html/index.html</code></pre>
+<p>After a few minutes, test that the web server is working by pointing a web browser to
+<strong><a href="http://public_ip_addr">http://public_ip_addr</a></strong>
+(replacing public_ip_addr with the address of your instance).  It will take a few minutes for the web server to be installed and started up.</p>
+<p>You should see your image displayed.</p>
+<p>Terminate the instance when you are finished.</p>
+
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <br>
+  <script>
+    $(document).on('keydown', function(e) {
+  e = e || window.event;
+  var nextTab;
+  switch (e.which || e.keyCode) {
+    case 37: // left
+      nextTab = $('.tab-menu a[data-tab].active').prev('a[data-tab]');
+      if (!nextTab.length) nextTab = $('.tab-menu a[data-tab]').last();
+      nextTab.click();
+      $('.pusher').focus();
+      break;
+
+    case 39: // right
+      nextTab = $('.tab-menu a[data-tab].active').next('a[data-tab]');
+      if (!nextTab.length) nextTab = $('.tab-menu a[data-tab]').first();
+      nextTab.click();
+      $('.pusher').focus();
+      break;
+  }
+});
+
+    $(document).ready(function() {
+  $('img').addClass('ui image');
+
+  $('.ui.embed').embed();
+
+  const $images = $('.lab img');
+  jQuery.each($images, function(i) {
+    if ($images[i].alt.length > 0) {
+      const divImg = $(document.createElement('div')).addClass(
+        'ui basic segment',
+      );
+      $($images[i]).wrap(divImg);
+      const divLabel = $(document.createElement('div')).addClass(
+        'ui blue ribbon label',
+      );
+      divLabel.append($images[i].alt);
+      $(divLabel).insertBefore($images[i]);
+    }
+  });
+
+  $('.ui.menu .item').tab({
+    history: true,
+    historyType: 'hash',
+  });
+
+  $('.popup').popup();
+
+  $('.ui.sidebar')
+    .sidebar({ context: $('.pushable') })
+    .sidebar('setting', 'transition', 'slide out')
+    .sidebar('attach events', '#toc');
+});
+
+  </script>
+
+
+
+  <div class="ui bottom fixed borderless right menu">
+    <div class="ui right small menu">
+      <div class="ui tiny basic message segment">
+         Powered by <a href="https://github.com/edeleastar/tutors-ts">tutors-ts.</a> Unless otherwise stated, this work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+      </div>
+    </div>
+  </div>
+
+  </body>
+
+</html>
