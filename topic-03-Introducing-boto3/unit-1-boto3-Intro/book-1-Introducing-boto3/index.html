@@ -139,8 +139,8 @@ html, body {
           8
         </a>
       
-        <a class="item" data-tab="9">
-          9
+        <a class="item" data-tab="Exercises">
+          Exercises
         </a>
       
     </div>
@@ -252,16 +252,6 @@ For practical instance creation you would need to specify a security group for y
           </div>
         
           <div class="ui tab segment lab" data-tab="3">
-            <h1>Exercises - upload to Moodle:</h1>
-<ol>
-<li>To enable you to ssh onto an instance you have created you must also specify a key pair. What parameters must you specify to launch an instance into a specific security group with a specific key pair? <strong>[screenshot 1]</strong></li>
-<li>How can you tag an instance when you are creating it? <strong>[screenshot 2]</strong></li>
-<li>What if you did not tag the instance when creating it – how can you tag the instance later? <strong>[screenshot 3]</strong></li>
-</ol>
-
-          </div>
-        
-          <div class="ui tab segment lab" data-tab="4">
             <h1>List instances</h1>
 <ol>
 <li>All of the code for the remaining scripts can be downloaded <a href="https://s3-eu-west-1.amazonaws.com/resources-hdip-devops/boto3code.zip">here</a>. For our first script, we list the instances we have running in EC2. We can get this information with just a few short lines of code. First, we’ll import the boto3 library. Using the library, we’ll create an EC2 resource. This is like a handle to the EC2 console that we can use in our script. Finally, we’ll use the EC2 resource to get all of the instances and then print their instance ID and state. Here’s what the script looks like:<pre><code>#!/usr/bin/env python3
@@ -277,7 +267,7 @@ If you haven’t created any instances, running this script won’t produce any 
 
           </div>
         
-          <div class="ui tab segment lab" data-tab="5">
+          <div class="ui tab segment lab" data-tab="4">
             <h1>Create an instance</h1>
 <ol>
 <li>One of the key pieces of information we need for scripting EC2 is an Amazon Machine Image (AMI) ID. This will let us tell our script what type of EC2 instance to create. While getting an AMI ID can be done programmatically, that&#39;s an advanced topic beyond the scope of this tutorial. For now, let’s go back to the AWS console and get an ID from there.
@@ -297,7 +287,7 @@ While the command will finish quickly, it will take some time for the instance t
 
           </div>
         
-          <div class="ui tab segment lab" data-tab="6">
+          <div class="ui tab segment lab" data-tab="5">
             <h1>Terminate an instance</h1>
 <ol>
 <li>Now that we can programmatically create and list instances, we also need a method to terminate them.
@@ -321,7 +311,7 @@ i--0c34e5ec790618146 {u&#39;Code&#39;: 48, u&#39;Name&#39;: &#39;terminated&#39;
 
           </div>
         
-          <div class="ui tab segment lab" data-tab="7">
+          <div class="ui tab segment lab" data-tab="6">
             <h1>S3 scripts - list buckets and their contents</h1>
 <ol>
 <li>The AWS Simple Storage Service (S3) provides object storage similar to a file system. Folders are represented as buckets and the contents of the buckets are known as keys. Of course, all of these objects can be managed with Python and the boto3 library.</li>
@@ -353,7 +343,7 @@ for bucket_name in sys.argv[1:]:
 <p>Creating a bucket is easy but comes with some rules and restrictions. To get the complete run-down, read the Bucket Restrictions and Limitations section in the S3 documentation. The two rules that needs to be emphasized for this example are 1) bucket names must be globally unique and 2) bucket names must follow DNS naming conventions. Note that we needed to specify a LocationConstraint otherwise the S3 bucket could have been created in any Region.
 When choosing a bucket name, pick one that you are sure hasn’t been used before and only use lowercase letters, numbers, and hyphens.
 Because simple bucket names like “my_bucket” are usually not available, a good way to get a unique bucket name is to use a name, a number, and the date. For example:</p>
-<pre><code>$ ./create_bucket.py projectx-bucket1-$(date +”%F-%s”)
+<pre><code>$ ./create_bucket.py projectx-bucket1-$(date +%F-%s)
 s3.Bucket(name=&#39;projectx-bucket1-2019-01-28-1548716885&#39;)</code></pre>
 <p>Now we can run the list_buckets.py script again to see the buckets we created.</p>
 <pre><code>$ ./list_buckets.py
@@ -363,7 +353,7 @@ projectx-bucket1-2019-01-28-1548716885
 
           </div>
         
-          <div class="ui tab segment lab" data-tab="8">
+          <div class="ui tab segment lab" data-tab="7">
             <h1>S3 scripts - Put a File into a Bucket</h1>
 <ol>
 <li>Similar to our bucket creation script, we start the put script by importing the sys and boto3 libraries and then creating an S3 resource. Now we need to capture the name of the bucket we’re putting the file into and the name of the file as well. We’ll consider the first argument to be the bucket name and the second argument to be the file name.
@@ -400,7 +390,7 @@ projectx-bucket1-2019-01-28-1548716885
 
           </div>
         
-          <div class="ui tab segment lab" data-tab="9">
+          <div class="ui tab segment lab" data-tab="8">
             <h1>S3 scripts - Delete Bucket Contents</h1>
 <ol>
 <li>For our delete script, we’ll start the same as our create script: importing the needed libraries, creating an S3 resource, and taking bucket names as arguments.
@@ -444,6 +434,23 @@ Running our <strong><em>delete_buckets.py</em></strong> script on our target buc
 <pre><code>$ ./delete_buckets.py projectx-bucket1-2019-01-28-1548716885
 {&#39;ResponseMetadata&#39;: {&#39;HostId&#39;: &#39;mMjzqdwBcj4aghfFwnuZGBoEBTjNJnUpvZlbPPnpQHp0OZSltQ97JfVWLmogEq3ceEbdQAjk9ms=&#39;, &#39;HTTPHeaders&#39;: {&#39;date&#39;: &#39;Mon, 28 Jan 2019 23:22:13 GMT&#39;, &#39;server&#39;: &#39;AmazonS3&#39;, &#39;x-amz-id-2&#39;: &#39;mMjzqdwBcj4aghfFwnuZGBoEBTjNJnUpvZlbPPnpQHp0OZSltQ97JfVWLmogEq3ceEbdQAjk9ms=&#39;, &#39;x-amz-request-id&#39;: &#39;C9C29654E32C4748&#39;}, &#39;RetryAttempts&#39;: 0, &#39;HTTPStatusCode&#39;: 204, &#39;RequestId&#39;: &#39;C9C29654E32C4748&#39;}}</code></pre>
 <p>We can run list_buckets.py again to see that our bucket has indeed been deleted.</p>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="Exercises">
+            <h1>Exercises - upload to Moodle:</h1>
+<p>Please use Python/boto3 to perform the following tasks :</p>
+<ol>
+<li>To enable you to ssh onto an instance you have created you must also specify a key pair. What parameters must you specify to launch an instance into a specific security group with a specific key pair? <strong>[screenshot 1]</strong></li>
+<li>How can you tag an instance when you are creating it? <strong>[screenshot 2]</strong></li>
+<li>What if you did not tag the instance when creating it – how can you tag the instance later? <strong>[screenshot 3]</strong></li>
+<li>Modify the <strong><em>put_bucket.py</em></strong> program to use subprocess.run() to launch the Firefox browser with URL of image loaded in the bucket. <strong>[screenshot 4]</strong></li>
+<li>When you run the <strong>list_buckets.py</strong> program it will fail because of a permission error when it tries to list the objects in the RosettaHub administration buckets. You should modify this program to handle this error without crashing. <strong>[screenshot 5]</strong></li>
+</ol>
+<p><strong><em>Submission to Moodle</em></strong></p>
+<ul>
+<li>Please upload your pdf file to the submission drop box in Moodle by midnight on Wednesday 6th Feb.</li>
+</ul>
 
           </div>
         
