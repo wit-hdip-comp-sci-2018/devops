@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css"
+          type="text/css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/railscasts.min.css"
+          rel="stylesheet"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/java.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+      
+
+body {
+  font-family: "Open Sans", "Helvetica", "Helvetica Neue",  "Arial", sans-serif;
+  font-size:90%;
+  color: black;
+}
+
+p {
+  margin: 0.5em;
+}
+
+pre code {
+  font-family: "Monaco";
+  font-size: 100%;
+}
+
+img {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin:10px;
+}
+
+h1, h2, h3 {
+  border-bottom:thin solid black;
+  margin-bottom: 0.5em;
+  margin-top: 1em;
+}
+
+h1 {
+  font-style:italic;
+  font-size:130%;
+}
+
+h2 {
+  font-size:110%;
+}
+
+h3 {
+  font-size:100%;
+}
+
+
+
+      
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+.wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.footer {
+  background: white;
+  text-align: right;
+}
+.content {
+  flex: 1;
+  overflow: auto;
+}
+
+
+
+    </style>
+  </head>
+
+  
+  
+
+  <div class="ui fixed top pointing inverted stackable menu labmenu">
+    <header class="header item">
+      <i id="toc" class="sitemap icon"></i>
+      
+        <a href="../../index.html"> Security considerations. Deploying a Node app on AWS  </a>
+      
+    </header>
+    <div class="right tab-menu menu">
+      
+        <a class="item" data-tab="Deploying a Node app">
+          Deploying a Node app
+        </a>
+      
+        <a class="item" data-tab="1-Installation">
+          1-Installation
+        </a>
+      
+        <a class="item" data-tab="2-Local DB">
+          2-Local DB
+        </a>
+      
+        <a class="item" data-tab="3-Decouple DB">
+          3-Decouple DB
+        </a>
+      
+        <a class="item" data-tab="4-Scaling a Node app">
+          4-Scaling a Node app
+        </a>
+      
+        <a class="item" data-tab="5-Load balancing a Node app">
+          5-Load balancing a Node app
+        </a>
+      
+    </div>
+  </div>
+
+
+  
+
+  <div class="ui pushable">
+    <div class="ui inverted labeled icon left inline vertical sidebar menu">
+      <br><br>
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-01-Python/unit-1-Python-Intro/book-1-python/index.html">Python Tutorial Lab </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-02-Week2/unit-1-More-Python/book-1-python/index.html">More Python </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-02-Week2/unit-2-EC2-S3/book-1-ec2-s3/index.html">EC2 and S3 lab </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-03-Introducing-boto3/unit-1-boto3-Intro/book-1-Introducing-boto3/index.html">Introducing Boto3 </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-04-What-is-devOps/unit-1-What-is-devOps/book-1-remote-ssh-command/index.html">Remote SSH commands </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-10-Security/unit-1-Security+node-deployment/book-1-Deploying-a-node-app/index.html">Deploying a Node app </a>
+          
+        
+      
+    </div>
+    <div class="pusher" tabindex="-1">
+      <div class="ui basic segment">
+        <br>
+        
+          <div class="ui tab segment lab" data-tab="Deploying a Node app">
+            <h1>Objectives</h1>
+<p>This lab should help you to deploy your node app from the EWD module on AWS for scaling and load balancing.</p>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="1-Installation">
+            <h1>Deploying a Node.js or Hapi app to AWS</h1>
+<p>These initial steps are identical to the start of the TLS lab we did a few weeks ago.</p>
+<h2>Install node, npm and hapi on an AWS EC2 instance</h2>
+<ol>
+<li><p>Go to AWS and select the EC2 service</p>
+</li>
+<li><p>Launch a micro instance using the default Amazon Linux 2 AMI</p>
+</li>
+<li><p>At Step 6 (Configure Security Group), create a new security group that allows access to TCP port 3000 as well as 22/SSH</p>
+</li>
+<li><p>Connect to your instance using SSH</p>
+</li>
+<li><p>On your instance, install the current version of nvm (node version manager):</p>
+<pre><code>curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+. ~/.nvm/nvm.sh</code></pre>
+</li>
+<li><p>Next install node 10.15.3 LTS and npm and the latest version of hapi (on your instance):</p>
+<pre><code>nvm install 10.15.3
+npm install hapi</code></pre>
+<p><br></p>
+</li>
+</ol>
+<h2>Test your intallation by deploying a basic Hapi application</h2>
+<p>You may wish to test everything is ok by downloading the very basic Hapi &quot;Hello World&quot; application provided <a href="archive/hapi_example.js">here</a>.  Start the application with:</p>
+<pre><code>node hapi_example.js</code></pre>
+<p>and point your browser to <a href="http://ip-address:3000">http://ip-address:3000</a>, replacing <strong>ip-address</strong> with your instance&#39;s IP address</p>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="2-Local DB">
+            <h1>Deploy an app with a local mongo database</h1>
+<p>Here we will deploy the final version of the donation-web sample app (from Eamonn de Leastar). This application uses a mongo database, which we configure first.</p>
+<h2>Install mongod on EC2 instance:</h2>
+<p>Firstly you will need to configure yum to find mongodb:</p>
+<pre><code># SSH into your instance first
+sudo nano /etc/yum.repos.d/mongodb-org-4.0.repo</code></pre>
+<p>Then enter the following into this file:</p>
+<pre><code>[mongodb-org-4.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/amazon/2013.03/mongodb-org/4.0/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc</code></pre>
+<p>Then install and run mongod:</p>
+<pre><code>sudo yum install -y mongodb-org
+sudo mongod -dbpath db --bind_ip_all</code></pre>
+<p>Now install and run the donation web app</p>
+<pre><code>sudo yum -y install git
+git clone https://github.com/wit-hdip-comp-sci-2018/donation-web.git
+cd donation-web/
+npm install
+node index.js</code></pre>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="3-Decouple DB">
+            <h1>Deploy an app with a separate mongo database</h1>
+<p>If your application runs on a single instance, you can deploy a local database on that instance.  However this is not a good design from the perspective of fault tolerance, high availability and scalability.  Configuring auto scaling and load balancing on such an application could result in data inconsistency as we would have multiple non-replicated copies of the database.</p>
+<p>Launch a new EC2 instance and use a security group that has the default mongo port (27017) open.  N.B. This should normally always be done in a private subnet as exposing databases to the public Internet is a major security risk. For this practice exercise though we will keep it public to make it easy to log in using SSH and carry out some configuration.  Tag this instance &#39;database&#39;</p>
+<p>Install and run mongod on this new &#39;database&#39; instance (as in previous step of lab)</p>
+<p>Go back to your other instance where donation is installed and edit the .env file</p>
+<pre><code>nano .env</code></pre>
+<p>to point it to the database instance.  Change &#39;localhost&#39; to your database instance&#39;s <strong>private</strong> IP address.</p>
+<pre><code>cookie_name=donation-web
+cookie_password=secretpasswordnotrevealedtoanyone
+db=mongodb://172.1.2.3/donation     (replace with correct IP address)</code></pre>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="4-Scaling a Node app">
+            <h1>Scaling a Node App - Starting your App or Database automatically</h1>
+<p>When creating the Launch Configuration for scaling you can specify a script to run at startup at Step 3 (Create Launch Configuration) - Expand Advanced Details and enter your script under User Data. The following would start the sample app.</p>
+<pre><code>#!/bin/bash
+su - ec2-user -c &#39;cd donation-web; node index.js&#39;</code></pre>
+<p>Note that this can also be done when launching instances manually.</p>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="5-Load balancing a Node app">
+            <h1>Load Balancing a Node App</h1>
+<h2>Sticky Sessions</h2>
+<p>If your app uses sessions for authentication of requests after users log in and sets a session cookie, then you&#39;ll need to enable <em>stickinesss</em>.  This means that the load balancer binds a client&#39;s session to a particular target instance for a specified period of time.  This makes sure that a sequence of requests from a particular user to the app all go to the same target.</p>
+<p>You can only configure sticky sessions after completing the wizard to create the target group.</p>
+<ul>
+<li>First, create the target group as normal.  </li>
+<li>Select your target group and click on the Description tab where you can see a button &quot;Edit Attributes&quot; at the bottom.  Check the &quot;Enable&quot; button for &quot;Stickiness&quot; and enter the desired duration.</li>
+</ul>
+<p>As an alternative, classic load balancers can be configured for session stickiness that is tied to a target instance&#39;s session cookie.</p>
+<h2>Load balancer http port and path (route) configuration</h2>
+<p>When creating an application load balancer, you configure <em>ports</em> in two places:</p>
+<ul>
+<li>Load balancer port (default 80)</li>
+<li>Target group port (default 80)</li>
+</ul>
+<p>The first is the port the load balancer listens on. The second is the port your target application listens on.  These do not need to be the same port number.  </p>
+<p>For a node app, you might wish to have the load balancer listen on the default port and forward the traffic on to port 3000 on the targets.  Then you would browse to <a href="http://lbname">http://lbname</a> rather than <a href="http://lbname:3000">http://lbname:3000</a>.  Note that your security group configuration needs to be consistent with the choices you make here.</p>
+<p>You also configure the <em>path</em> for HTTP health checks in Step 4. The default route is &#39;/&#39;. This should be changed if your app does not listen on this path.</p>
+<h2>Demonstrating load balancing with a node application</h2>
+<p>To show the local hostname in a browser and log test requests to the console, you could use the value of os.hostname() by editing routes.js to have:</p>
+<pre><code>const os = require(&quot;os&quot;);</code></pre>
+<p>and add a route like this one (in routes.js)</p>
+<pre><code>{
+  method: &#39;GET&#39;,
+  path: &#39;/testlb&#39;,
+  handler: function (request, h) {
+     return(&#39;Server: &#39; + os.hostname());
+  }
+},</code></pre>
+
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <br>
+  <script>
+    $(document).on('keydown', function(e) {
+  e = e || window.event;
+  var nextTab;
+  switch (e.which || e.keyCode) {
+    case 37: // left
+      nextTab = $('.tab-menu a[data-tab].active').prev('a[data-tab]');
+      if (!nextTab.length) nextTab = $('.tab-menu a[data-tab]').last();
+      nextTab.click();
+      $('.pusher').focus();
+      break;
+
+    case 39: // right
+      nextTab = $('.tab-menu a[data-tab].active').next('a[data-tab]');
+      if (!nextTab.length) nextTab = $('.tab-menu a[data-tab]').first();
+      nextTab.click();
+      $('.pusher').focus();
+      break;
+  }
+});
+
+    $(document).ready(function() {
+  $('img').addClass('ui image');
+
+  $('.ui.embed').embed();
+
+  const $images = $('.lab img');
+  jQuery.each($images, function(i) {
+    if ($images[i].alt.length > 0) {
+      const divImg = $(document.createElement('div')).addClass(
+        'ui basic segment',
+      );
+      $($images[i]).wrap(divImg);
+      const divLabel = $(document.createElement('div')).addClass(
+        'ui blue ribbon label',
+      );
+      divLabel.append($images[i].alt);
+      $(divLabel).insertBefore($images[i]);
+    }
+  });
+
+  $('.ui.menu .item').tab({
+    history: true,
+    historyType: 'hash',
+  });
+
+  $('.popup').popup();
+
+  $('.ui.sidebar')
+    .sidebar({ context: $('.pushable') })
+    .sidebar('setting', 'transition', 'slide out')
+    .sidebar('attach events', '#toc');
+});
+
+  </script>
+
+
+
+  <div class="ui bottom fixed borderless right menu">
+    <div class="ui right small menu">
+      <div class="ui tiny basic message segment">
+         Powered by <a href="https://github.com/edeleastar/tutors-ts">tutors-ts.</a> Unless otherwise stated, this work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+      </div>
+    </div>
+  </div>
+
+  </body>
+
+</html>

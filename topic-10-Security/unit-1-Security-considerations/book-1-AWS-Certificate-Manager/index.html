@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css"
+          type="text/css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/railscasts.min.css"
+          rel="stylesheet"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/java.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+      
+
+body {
+  font-family: "Open Sans", "Helvetica", "Helvetica Neue",  "Arial", sans-serif;
+  font-size:90%;
+  color: black;
+}
+
+p {
+  margin: 0.5em;
+}
+
+pre code {
+  font-family: "Monaco";
+  font-size: 100%;
+}
+
+img {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin:10px;
+}
+
+h1, h2, h3 {
+  border-bottom:thin solid black;
+  margin-bottom: 0.5em;
+  margin-top: 1em;
+}
+
+h1 {
+  font-style:italic;
+  font-size:130%;
+}
+
+h2 {
+  font-size:110%;
+}
+
+h3 {
+  font-size:100%;
+}
+
+
+
+      
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+.wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.footer {
+  background: white;
+  text-align: right;
+}
+.content {
+  flex: 1;
+  overflow: auto;
+}
+
+
+
+    </style>
+  </head>
+
+  
+  
+
+  <div class="ui fixed top pointing inverted stackable menu labmenu">
+    <header class="header item">
+      <i id="toc" class="sitemap icon"></i>
+      
+        <a href="../../index.html"> Cloud Security  </a>
+      
+    </header>
+    <div class="right tab-menu menu">
+      
+        <a class="item" data-tab="Load Balancer Secure Listener">
+          Load Balancer Secure Listener
+        </a>
+      
+        <a class="item" data-tab="1-Create a certificate for your LB">
+          1-Create a certificate for your LB
+        </a>
+      
+        <a class="item" data-tab="2-Use AWS Certificate Manager">
+          2-Use AWS Certificate Manager
+        </a>
+      
+        <a class="item" data-tab="3-Add Secure Listener">
+          3-Add Secure Listener
+        </a>
+      
+    </div>
+  </div>
+
+
+  
+
+  <div class="ui pushable">
+    <div class="ui inverted labeled icon left inline vertical sidebar menu">
+      <br><br>
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-01-Python/unit-1-Python-Intro/book-1-python/index.html">Python Tutorial Lab </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-02-Week2/unit-1-More-Python/book-1-python/index.html">More Python </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-02-Week2/unit-2-EC2-S3/book-1-ec2-s3/index.html">EC2 and S3 lab </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-03-Introducing-boto3/unit-1-boto3-Intro/book-1-Introducing-boto3/index.html">Introducing Boto3 </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-04-What-is-devOps/unit-1-What-is-devOps/book-1-remote-ssh-command/index.html">Remote SSH commands </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-10-Security/unit-1-Security-considerations/book-1-AWS-Certificate-Manager/index.html">Load Balancer Secure Listener </a>
+          
+        
+      
+        
+          
+            <a class="item"
+               href="https://wit-hdip-comp-sci-2018.github.io/devops//topic-10-Security/unit-2-node-deployment/book-1-Deploying-a-node-app/index.html">Deploying a Node app on AWS </a>
+          
+        
+      
+    </div>
+    <div class="pusher" tabindex="-1">
+      <div class="ui basic segment">
+        <br>
+        
+          <div class="ui tab segment lab" data-tab="Load Balancer Secure Listener">
+            <h1>Objectives</h1>
+<p>Configure load balancer to accept HTTPS traffic. </p>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="1-Create a certificate for your LB">
+            <h1>Create a self-signed certificate</h1>
+<p>In this step we will create a self-signed certificate to attach to an elastic load balancer in AWS.</p>
+<p>Using a self-signed certificate will allow us to secure traffic between browser and load balancer, but the browser will provide a warning that the certificate is untrusted as there is potential for a meet-in-the-middle attack.  Resolving this is beyond the scope of this module -- it requires you to register a domain name and prove domain ownership to a trusted root CA such as <em>Let&#39;s Encrypt</em>.</p>
+<ul>
+<li><p>Firstly, create the load balancer in AWS and have it accept HTTP traffic only for now.</p>
+</li>
+<li><p>In Step 3, specify a security group that accepts HTTPS traffic (port 443) as well as HTTP (port 80) from anywhere.</p>
+</li>
+<li><p>When you are finished, note the DNS name assigned to the load balancer.<br></p>
+</li>
+<li><p>As we did in the TLS lab in the EWD module a few weeks ago, we create a 2048-bit RSA private key for the CA</p>
+<pre><code>openssl genrsa -out webserver.key 2048</code></pre>
+</li>
+<li><p>Now use this to create a certificate signing request for the web server, but this time enter your <em>load balancer&#39;s DNS name</em> when asked for the <strong>Common Name</strong> (FQDN); e.g.</p>
+<pre><code>openssl req -new -key webserver.key -out webserver.csr</code></pre>
+<font face="Courier">
+Country Name (2 letter code) [AU]:IE<br>
+State or Province Name (full name) [Some-State]:.<br>
+Locality Name (eg, city) []:Waterford<br>
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Reliable web apps<br>
+Organizational Unit Name (eg, section) []:.<br>
+Common Name (e.g. server FQDN or YOUR name) []:<strong>test-lb-52894102.eu-west-1.elb.amazonaws.com</strong><br>
+Email Address []:<br>
+Please enter the following &#39;extra&#39; attributes<br>
+to be sent with your certificate request<br>
+A challenge password []:<br>
+An optional company name []:<br><br>
+</font>
+</li>
+<li><p>Next, create a new self-signed certificate based on this new CSR file:</p>
+<pre><code>openssl x509 -req -signkey webserver.key -sha256 -in webserver.csr -out webserver_self.crt</code></pre>
+</li>
+</ul>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="2-Use AWS Certificate Manager">
+            <h1>Import your certificate into AWS Certificate Manager</h1>
+<p>In the AWS Web Management Console, select <em>Services</em> and <em>Certificate Manager</em> (in the <em>Security</em> category).</p>
+<p>Click <em>Get Started</em> under <em>Provision Certificates</em></p>
+<p>Next choose <em>Import a Certificate</em>.</p>
+<p>Paste in your <strong>Certificate body</strong> (<em>webserver_self.crt</em>) and <strong>Certificate private Key</strong> (<em>webserver.key</em>). You can leave the Certificate chain blank.
+<img src="img/certimport.png" alt="Importing a Certificate"></p>
+<p>Now <strong>Review and Import</strong> and confirm on the next page.</p>
+
+          </div>
+        
+          <div class="ui tab segment lab" data-tab="3-Add Secure Listener">
+            <h1>Create a HTTPS listener for your LB</h1>
+<ol>
+<li><p>Go back to EC2, select <em>Load Balancers</em> and your recently-created load balancer.</p>
+</li>
+<li><p>Click on the <em>Listeners</em> tab and <em>Add Listener</em></p>
+</li>
+<li><p>Choose HTTPS (port 443).</p>
+</li>
+<li><p>Under <em>Default action(s)</em>, add an Action to Forward to your target group</p>
+</li>
+<li><p>Leave the Security policy setting unchanged</p>
+</li>
+<li><p>For Default SSL certificate, select your newly-created certificate from AWS Certificate Manager (ACM)</p>
+</li>
+<li><p>Click Save</p>
+</li>
+<li><p>You should now be able to browse to <a href="https://your-loadbalancer-dns-name/">https://your-loadbalancer-dns-name/</a>
+(You will get a browser warning as the certificate is self-signed.)</p>
+</li>
+<li><p>You may wish to inspect the certificate presented by the load balancer.</p>
+</li>
+</ol>
+<p><img src="img/securelistener.png" alt="Adding secure listener"></p>
+<p><img src="img/https.png" alt="Browse to https LB"></p>
+
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <br>
+  <script>
+    $(document).on('keydown', function(e) {
+  e = e || window.event;
+  var nextTab;
+  switch (e.which || e.keyCode) {
+    case 37: // left
+      nextTab = $('.tab-menu a[data-tab].active').prev('a[data-tab]');
+      if (!nextTab.length) nextTab = $('.tab-menu a[data-tab]').last();
+      nextTab.click();
+      $('.pusher').focus();
+      break;
+
+    case 39: // right
+      nextTab = $('.tab-menu a[data-tab].active').next('a[data-tab]');
+      if (!nextTab.length) nextTab = $('.tab-menu a[data-tab]').first();
+      nextTab.click();
+      $('.pusher').focus();
+      break;
+  }
+});
+
+    $(document).ready(function() {
+  $('img').addClass('ui image');
+
+  $('.ui.embed').embed();
+
+  const $images = $('.lab img');
+  jQuery.each($images, function(i) {
+    if ($images[i].alt.length > 0) {
+      const divImg = $(document.createElement('div')).addClass(
+        'ui basic segment',
+      );
+      $($images[i]).wrap(divImg);
+      const divLabel = $(document.createElement('div')).addClass(
+        'ui blue ribbon label',
+      );
+      divLabel.append($images[i].alt);
+      $(divLabel).insertBefore($images[i]);
+    }
+  });
+
+  $('.ui.menu .item').tab({
+    history: true,
+    historyType: 'hash',
+  });
+
+  $('.popup').popup();
+
+  $('.ui.sidebar')
+    .sidebar({ context: $('.pushable') })
+    .sidebar('setting', 'transition', 'slide out')
+    .sidebar('attach events', '#toc');
+});
+
+  </script>
+
+
+
+  <div class="ui bottom fixed borderless right menu">
+    <div class="ui right small menu">
+      <div class="ui tiny basic message segment">
+         Powered by <a href="https://github.com/edeleastar/tutors-ts">tutors-ts.</a> Unless otherwise stated, this work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+      </div>
+    </div>
+  </div>
+
+  </body>
+
+</html>
