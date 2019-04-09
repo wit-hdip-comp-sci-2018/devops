@@ -243,6 +243,7 @@ enabled=1
 gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc</code></pre>
 <p>Then install and run mongod:</p>
 <pre><code>sudo yum install -y mongodb-org
+mkdir db
 sudo mongod -dbpath db --bind_ip_all</code></pre>
 <p>From another terminal, make a new SSH connection to your instance and download and configure a recent version of the donation web app</p>
 <pre><code>curl https://codeload.github.com/wit-hdip-comp-sci-2018/donation-web/zip/donation.11.end -o donation.zip
